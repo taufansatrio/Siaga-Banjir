@@ -2,6 +2,7 @@ package com.siagabanjir;
 
 import java.util.ArrayList;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 import com.siagabanjir.places.MyPlaces;
 
@@ -26,6 +27,20 @@ public class ListFragmentActivity extends ActionBarActivity {
 	private BinderPlaces binderPlaces;
 	
 	private MyPlaces myPlaces;
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "CZWJXGNWJVHM35JYDTRC");
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

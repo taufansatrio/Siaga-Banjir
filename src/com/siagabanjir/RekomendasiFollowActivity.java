@@ -3,6 +3,7 @@ package com.siagabanjir;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.model.LatLng;
 import com.siagabanjir.follow.FollowPintuAir;
 import com.siagabanjir.places.MyPlaces;
@@ -37,6 +38,20 @@ public class RekomendasiFollowActivity extends ActionBarActivity {
 
 	private MyPlaces myPlaces;
 
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "CZWJXGNWJVHM35JYDTRC");
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -37,6 +37,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
@@ -78,6 +79,20 @@ public class DetailActivity extends ActionBarActivity {
 
 	// private TextView tvnama, tvtinggiair, tvstatus;
 	// private DetailGraph graph;
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "CZWJXGNWJVHM35JYDTRC");
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

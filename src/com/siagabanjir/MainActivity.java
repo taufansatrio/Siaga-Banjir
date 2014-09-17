@@ -2,6 +2,7 @@ package com.siagabanjir;
 
 import java.util.ArrayList;
 
+import com.flurry.android.FlurryAgent;
 import com.siagabanjir.DataPintuAir;
 import com.siagabanjir.adapter.TabsPagerAdapter;
 import com.siagabanjir.follow.GcmBroadcastReceiver;
@@ -44,6 +45,20 @@ public class MainActivity extends ActionBarActivity implements
 
 	// Tab titles
 	private String[] tabs = { "Home", "My Place" };
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "CZWJXGNWJVHM35JYDTRC");
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +181,7 @@ public class MainActivity extends ActionBarActivity implements
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
+	
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */

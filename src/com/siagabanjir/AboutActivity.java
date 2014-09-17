@@ -1,5 +1,7 @@
 package com.siagabanjir;
 
+import com.flurry.android.FlurryAgent;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,20 @@ public class AboutActivity extends ActionBarActivity {
 
 	private ActionBar actionBar;
 	private Fragment fragment;
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, "CZWJXGNWJVHM35JYDTRC");
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
