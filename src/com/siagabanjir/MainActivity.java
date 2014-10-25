@@ -155,6 +155,7 @@ public class MainActivity extends ActionBarActivity implements
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
+			FlurryAgent.logEvent("Refresh");
 			refreshItem = item;
 
 			if (fragment instanceof HomeFragment)

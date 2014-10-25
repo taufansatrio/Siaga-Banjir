@@ -258,6 +258,7 @@ public class HomeFragment extends ListFragment {
 			JSONArray dataPintuAir;
 			try {
 				dataPintuAir = json.getJSONArray("datapintuair");
+				//Log.d("datapintuair", ""+dataPintuAir);
 				for (int ii = 0; ii < dataPintuAir.length(); ii++) {
 					JSONObject obj = dataPintuAir.getJSONObject(ii);
 					String nama = obj.getString("nama");
@@ -310,9 +311,11 @@ public class HomeFragment extends ListFragment {
 				 * if (pd != null) { pd.dismiss(); }
 				 **/
 			} catch (NullPointerException e) {
+				Log.d("null?","yes");
 				Toast.makeText(context,
 						"Error fetching data or no internet connection",
 						Toast.LENGTH_LONG).show();
+				
 				/**
 				 * if (pd != null) { pd.dismiss(); }
 				 **/

@@ -135,9 +135,11 @@ public class RekomendasiFollowActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case R.id.action_save:
 			savePlace();
+			FlurryAgent.logEvent("Create_NewPlace");
 			return true;
 		case R.id.action_discard:
 			discardPlace();
+			FlurryAgent.logEvent("Discard_Place");
 			return true;
 		case R.id.action_about:
 			Intent ii = new Intent(this, AboutActivity.class);

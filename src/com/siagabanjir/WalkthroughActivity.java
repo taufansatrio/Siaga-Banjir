@@ -50,6 +50,8 @@ public class WalkthroughActivity extends ActionBarActivity {
         actionBar.hide();
         
         Intent i = getIntent();
+        FlurryAgent.logEvent("View_Walkthrough");
+        
         //balikin ke aplikasinya bingung Rei hehe
         /*
         if (mViewPager.getAdapter().getCount() == MAX_VIEWS-1) {

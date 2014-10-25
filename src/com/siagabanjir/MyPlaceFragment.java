@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
@@ -34,11 +36,13 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -56,13 +60,16 @@ public class MyPlaceFragment extends Fragment implements OnMapClickListener,
 	private LocationRequest locationRequest;
 	private boolean locationEnabled;
 	private boolean addingMyPlace;
+	
+	//Initialize zoom value
+	private float previousZoomLevel = -1.0f;
 
 	private HashMap<LatLng, String> myPlaces;
 
 	public MyPlaceFragment(Context context) {
 		this.context = context;
 		myPlaces = new MyPlaces(context).getPlaces();
-
+		FlurryAgent.logEvent("View_MyPlace");
 	}
 
 	
@@ -120,20 +127,37 @@ public class MyPlaceFragment extends Fragment implements OnMapClickListener,
 			locationEnabled = true;
 		}
 
-		locationClient.connect();
-
+		locationClient.connect();		
 	}
-
+	
+	public OnCameraChangeListener getCameraChangeListener()
+	{
+	    return new OnCameraChangeListener() 
+	    {
+	        @Override
+	        public void onCameraChange(CameraPosition position) 
+	        {
+	        	if (previousZoomLevel != position.zoom) {
+	        		FlurryAgent.logEvent("CurrentZoomLevel: "+position.zoom);
+	        		previousZoomLevel = position.zoom;
+	        	}	            
+	        }
+	    };
+	}
+	
 	private void initializeMap() {
 		if (peta == null) {
 			peta = mapFragment.getMap();
-
+			
 			// check if map is created successfully or not
 			if (peta == null) {
 				Toast.makeText(this.getActivity().getApplicationContext(),
 						"Error showing map", Toast.LENGTH_SHORT).show();
 			} else {
+				previousZoomLevel = peta.getCameraPosition().zoom;
+				
 				peta.setOnMapLongClickListener(this);
+				peta.setOnCameraChangeListener(getCameraChangeListener());
 			}
 
 		}
@@ -150,6 +174,9 @@ public class MyPlaceFragment extends Fragment implements OnMapClickListener,
 		// TODO Auto-generated method stub
 		// locationClient.setMockMode(true);
 		Location location = locationClient.getLastLocation();
+		
+		FlurryAgent.logEvent("User_Location: "+locationClient.getLastLocation().toString());
+		
 		if (location != null) {
 			Geocoder geocoder = new Geocoder(context);
 			try {
@@ -292,17 +319,25 @@ public class MyPlaceFragment extends Fragment implements OnMapClickListener,
 	@Override
 	public void onMapLongClick(LatLng newLoc) {
 		// if (addingMyPlace) return;
-
+		boolean addingPintuAir = false;
+		
 		if (currentMarker != null) {
 			currentMarker.remove();
 		}
 		final LatLng loc = newLoc;
 		final MarkerOptions marker = new MarkerOptions();
+//		final ArrayList<DataPintuAir> inArea = checkLocation(marker.getPosition());
+		final ArrayList<DataPintuAir> inArea = checkLocation(newLoc);
+//		for (int i = 0; i < inArea.size(); i++) {
+//			if (newLoc.equals(inArea.get(i).getLocation())) addingPintuAir = true;
+//		}
 		marker.position(newLoc);
+		
+		FlurryAgent.logEvent("CurrentZoomLevel_NewMarker: "+peta.getCameraPosition().zoom);
+		
 		marker.icon(BitmapDescriptorFactory
 				.fromResource(R.drawable.ic_mylocation));
 		currentMarker = peta.addMarker(marker);
-		final ArrayList<DataPintuAir> inArea = checkLocation(marker.getPosition());
 
 		if (addingMyPlace)
 			return;
@@ -357,7 +392,7 @@ public class MyPlaceFragment extends Fragment implements OnMapClickListener,
 							 * .getActivity().getBaseContext(),
 							 * RekomendasiFollowActivity.class);
 							 * startActivity(i);
-							 */
+							 */							
 							return true;
 						}
 

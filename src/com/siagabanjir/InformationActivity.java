@@ -43,6 +43,7 @@ public class InformationActivity extends ActionBarActivity {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		Intent i = getIntent();
+		FlurryAgent.logEvent("View_Info");
 	}
 
 	@Override

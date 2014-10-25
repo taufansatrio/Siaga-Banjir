@@ -11,6 +11,7 @@ import com.siagabanjir.follow.FollowPintuAir;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class DataPintuAir implements Parcelable, Comparable<DataPintuAir> {
 	private String nama;
@@ -119,7 +120,7 @@ public class DataPintuAir implements Parcelable, Comparable<DataPintuAir> {
 	private static boolean isInArea(LatLng location, LatLng currentlocation) {
 		// TODO Auto-generated method stub
 		float radius = 4000.0f;
-		float[] results = new float[1];
+		float[] results = new float[1];		
 		Location.distanceBetween(location.latitude, 
 				location.longitude, currentlocation.latitude, currentlocation.longitude, results);
 		

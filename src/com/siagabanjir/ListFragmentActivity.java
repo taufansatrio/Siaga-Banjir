@@ -65,6 +65,8 @@ public class ListFragmentActivity extends ActionBarActivity {
 		listPlaces = (ListView) findViewById(R.id.listPlaces);
 		listPlaces.setAdapter(binderPlaces);
 		
+		FlurryAgent.logEvent("View_MySavedPlaces");
+		
 		listPlaces.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

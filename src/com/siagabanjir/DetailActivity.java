@@ -124,7 +124,9 @@ public class DetailActivity extends ActionBarActivity {
 		tvPintuAir.setText(nama);
 		tvStatus.setText(status);
 		lastUpdate.setText("Last updated: " + pintuair.getTanggal() + " " + waktu + ".00");
-
+		
+		FlurryAgent.logEvent("View_PintuAir_"+nama);
+		
 		if (status.equals("NORMAL")) {
 			tvStatus.setTextColor(Color.parseColor("#2ecc71"));
 		} else if (status.equals("WASPADA")) {
@@ -394,6 +396,7 @@ public class DetailActivity extends ActionBarActivity {
 		switch (item.getItemId()) {
 		case R.id.action_share:
 			captureMapScreen();
+			FlurryAgent.logEvent("Share");
 			return true;
 		case R.id.action_about:
 			Intent ii = new Intent(this, AboutActivity.class);
